@@ -154,9 +154,12 @@ namespace ImageAPI.Services
 
                 return variationPath;
             }
+            catch (ArgumentException)
+            {
+                throw;
+            }
             catch (InvalidOperationException ex)
             {
-                _logger.LogWarning(ex.Message);
                 throw;
             }
             catch (Exception ex)
@@ -178,7 +181,7 @@ namespace ImageAPI.Services
 
                 string imageDir = Path.GetDirectoryName(imageMetadata.Original.Path);
 
-                
+
                 if (Directory.Exists(imageDir))
                 {
                     Directory.Delete(imageDir, true);
@@ -193,9 +196,23 @@ namespace ImageAPI.Services
 
                 _logger.LogInformation($"Image with ID {imageId} deleted successfully.");
             }
+            catch (ArgumentException)
+            {
+                throw;
+            }
+            catch (IOException ioEx)
+            {
+                _logger.LogError(ioEx, "I/O error while deleting image files.");
+                throw new InvalidOperationException("Failed to delete image files from disk.");
+            }
+            catch (UnauthorizedAccessException authEx)
+            {
+                _logger.LogError(authEx, "Access denied while deleting image files.");
+                throw new InvalidOperationException("Access denied when deleting image files.");
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting image.");
+                _logger.LogError(ex, "Unexpected error while deleting image.");
                 throw new InvalidOperationException("Failed to delete image.");
             }
         }

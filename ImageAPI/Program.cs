@@ -4,8 +4,24 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using ImageAPI.Services;
 using MongoDB.Driver;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+string logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()  
+    .WriteTo.File(
+        $"{logDirectory}/log-.log",   
+        rollingInterval: RollingInterval.Day,  
+        fileSizeLimitBytes: 10_000_000,       
+        retainedFileCountLimit: 30           
+    )
+    .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog();
 
 // Bind AppSettings section
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));

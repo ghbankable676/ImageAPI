@@ -25,10 +25,13 @@ namespace ImageAPI.Controllers
                 string imageId = await _imageService.UploadImageAsync(file);
                 return Ok(new { ImageId = imageId });
             }
+            catch (ArgumentException aeEx)
+            {
+                return BadRequest(new { Error = aeEx.Message });
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error uploading image.");
-                return StatusCode(500, "Internal server error.");
+                return StatusCode(500, new { Error = "Failed to upload image." });
             }
         }
 
@@ -43,13 +46,15 @@ namespace ImageAPI.Controllers
             }
             catch (ArgumentException ex)
             {
-                _logger.LogWarning(ex.Message);
-                return NotFound(ex.Message);
+                return NotFound(new { Error = ex.Message });
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.LogError(ex, "Error retrieving image variation.");
-                return StatusCode(500, "Internal server error.");
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Error = "Failed to retrieve image variation." });
             }
         }
 
@@ -62,10 +67,17 @@ namespace ImageAPI.Controllers
                 await _imageService.DeleteImageAsync(imageId);
                 return Ok("Image deleted successfully.");
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                _logger.LogError(ex, "Error deleting image.");
-                return StatusCode(500, "Internal server error.");
+                return NotFound(new { Error = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Error = "Failed to delete image." });
             }
         }
     }
