@@ -5,6 +5,9 @@ using System.Drawing;
 
 namespace ImageAPI.Services
 {
+    /// <summary>
+    /// Service for handling image-related operations such as uploading, deleting, and resizing images.
+    /// </summary>
     public class ImageService
     {
         private readonly ILogger<ImageService> _logger;
@@ -20,6 +23,11 @@ namespace ImageAPI.Services
             _imageBasePath = appSettings.ImageBasePath;
         }
 
+        /// <summary>
+        /// Uploads an image to the server, saves the original image and its variations, and records metadata.
+        /// </summary>
+        /// <param name="file">The image file to upload.</param>
+        /// <returns>The GUID representing the image.</returns>
         public async Task<string> UploadImageAsync(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -119,6 +127,15 @@ namespace ImageAPI.Services
             }
         }
 
+        /// <summary>
+        /// Retrieves a specific variation of an image based on the requested height. If the variation does not exist, it generates and stores the variation.
+        /// </summary>
+        /// <param name="imageId">The unique identifier of the image.</param>
+        /// <param name="height">The requested height of the image variation. The height must not exceed the original image height.</param>
+        /// <returns>A string representing the path to the generated or existing image variation file.</returns>
+        /// <exception cref="ArgumentException">Thrown when the image with the provided ID does not exist in the repository.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the requested height exceeds the original image height.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when an error occurs during the process of retrieving or generating the image variation.</exception>
         public async Task<string> GetImageVariationAsync(Guid imageId, int height)
         {
             try
@@ -169,6 +186,10 @@ namespace ImageAPI.Services
             }
         }
 
+        /// <summary>
+        /// Deletes an image and its associated files and metadata.
+        /// </summary>
+        /// <param name="imageId">The GUID of the image to delete.</param>
         public async Task DeleteImageAsync(Guid imageId)
         {
             try

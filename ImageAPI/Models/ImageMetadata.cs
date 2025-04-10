@@ -1,5 +1,8 @@
 ﻿namespace ImageAPI.Models
 {
+    /// <summary>
+    /// Contains metadata information for a specific image, including the original image and its variations.
+    /// </summary>
     public class ImageMetadata
     {
         public Guid Id { get; set; }

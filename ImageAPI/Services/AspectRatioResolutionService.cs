@@ -5,9 +5,12 @@ using Newtonsoft.Json;
 
 
 namespace ImageAPI.Services
-{    public class AspectRatioResolutionService
+{
+    /// <summary>
+    /// Service for resolving and loading aspect ratio configurations from a file.
+    /// </summary>
+    public class AspectRatioResolutionService
     {
-        // Define the structure for the aspect ratio data
         public class Resolution
         {
             public int Width { get; set; }
@@ -19,7 +22,6 @@ namespace ImageAPI.Services
             public Dictionary<string, List<Resolution>> AspectRatios { get; set; }
         }
 
-        // Method to load the aspect ratios and resolutions from the JSON file
         public AspectRatioData LoadAspectRatiosFromFile(string filePath)
         {
             string json = File.ReadAllText(filePath);

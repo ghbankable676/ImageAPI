@@ -1,5 +1,8 @@
 ﻿namespace ImageAPI.Models
 {
+    /// <summary>
+    /// Represents a variation of an image, typically based on size (height, width) adjustments.
+    /// </summary>
     public class ImageVariation
     {
         public int Height { get; set; }

@@ -3,6 +3,9 @@ using System.Text.Json;
 
 namespace ImageAPI.Repositories
 {
+    /// <summary>
+    /// A repository implementation for handling image metadata in an in-memory data store.
+    /// </summary>
     public class ImageRepository : IImageRepository
     {
         private readonly string _dataFilePath;

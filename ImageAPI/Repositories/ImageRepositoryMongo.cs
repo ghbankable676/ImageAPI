@@ -3,6 +3,9 @@ using MongoDB.Driver;
 
 namespace ImageAPI.Repositories
 {
+    /// <summary>
+    /// A repository implementation for handling image metadata in a MongoDB database.
+    /// </summary>
     public class ImageRepositoryMongo : IImageRepository
     {
         private readonly IMongoCollection<ImageMetadata> _imageCollection;

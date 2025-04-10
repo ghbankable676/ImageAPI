@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ImageAPI.Controllers
 {
+    /// <summary>
+    /// Handles HTTP requests related to image operations, such as uploading, retrieving, and deleting images.
+    /// </summary>
     [ApiController]
     [Route("api/images")]
     public class ImageController : ControllerBase
@@ -16,6 +19,11 @@ namespace ImageAPI.Controllers
             _imageService = imageService;
         }
 
+        /// <summary>
+        /// Uploads an image to the server.
+        /// </summary>
+        /// <param name="file">The image file to upload</param>
+        /// <returns>A GUID representing the image</returns>
         // Upload Image
         [HttpPost("upload")]
         public async Task<IActionResult> UploadImage(IFormFile file)
@@ -35,7 +43,12 @@ namespace ImageAPI.Controllers
             }
         }
 
-        // Get Image Variation
+        /// <summary>
+        /// Retrieves a specific image variation by ID and height.
+        /// </summary>
+        /// <param name="imageId">The ID of the image.</param>
+        /// <param name="height">The height of the requested image variation.</param>
+        /// <returns>Path to the image variation</returns>
         [HttpGet("{imageId:guid}/variation/{height:int}")]
         public async Task<IActionResult> GetImageVariation(Guid imageId, int height)
         {
@@ -58,7 +71,11 @@ namespace ImageAPI.Controllers
             }
         }
 
-        // Delete Image
+        /// <summary>
+        /// Deletes an image by its unique identifier.
+        /// </summary>
+        /// <param name="imageId">The unique identifier of the image to delete.</param>
+        /// <returns>An ActionResult indicating the result of the deletion.</returns>
         [HttpDelete("{imageId:guid}")]
         public async Task<IActionResult> DeleteImage(Guid imageId)
         {
