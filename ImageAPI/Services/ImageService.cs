@@ -54,12 +54,13 @@ namespace ImageAPI.Services
                     throw new ArgumentException("The uploaded file is not a valid image.");
                 }
 
-                // Save original image to disk
-                memoryStream.Position = 0;
-                using (var fileStream = new FileStream(originalPath, FileMode.Create))
-                {
-                    await memoryStream.CopyToAsync(fileStream);
-                }
+                await SaveToDisk(originalPath, memoryStream);
+
+                // Also save a copy with a similar nomenclature as variations (ex 1080px.png)
+
+                var originalVariationPath = Path.Combine(imageDir, $"{originalHeight}{extension}");
+                await SaveToDisk(originalVariationPath, memoryStream);
+
 
                 // Determine aspect ratio string and value
                 string aspectRatioStr = $"{originalWidth}:{originalHeight}";
@@ -118,8 +119,6 @@ namespace ImageAPI.Services
             }
         }
 
-
-
         public async Task<string> GetImageVariationAsync(Guid imageId, int height)
         {
             try
@@ -173,10 +172,23 @@ namespace ImageAPI.Services
             {
                 var imageMetadata = await _imageRepository.GetImageByIdAsync(imageId);
                 if (imageMetadata == null)
+                {
                     throw new ArgumentException("Image not found.");
+                }
 
-                // Delete files and metadata
-                Directory.Delete(Path.GetDirectoryName(imageMetadata.Original.Path), true);
+                string imageDir = Path.GetDirectoryName(imageMetadata.Original.Path);
+
+                
+                if (Directory.Exists(imageDir))
+                {
+                    Directory.Delete(imageDir, true);
+                }
+                else // Directory doesn't exist, log a warning and proceed.
+                {
+                    _logger.LogWarning($"Image folder for image with ID {imageId} does not exist on disk.");
+                }
+
+                // Proceed with deleting the metadata from the repository
                 await _imageRepository.DeleteImageAsync(imageId);
 
                 _logger.LogInformation($"Image with ID {imageId} deleted successfully.");
@@ -206,6 +218,16 @@ namespace ImageAPI.Services
             double aspectRatio = (double)originalWidth / originalHeight;
             return (int)Math.Round(targetHeight * aspectRatio);
         }
+
+        private static async Task SaveToDisk(string originalPath, MemoryStream memoryStream)
+        {
+            memoryStream.Position = 0;
+            using (var fileStream = new FileStream(originalPath, FileMode.Create))
+            {
+                await memoryStream.CopyToAsync(fileStream);
+            }
+        }
+
 
         #endregion
     }
