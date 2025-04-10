@@ -26,19 +26,5 @@ namespace ImageAPI.Services
             var aspectRatioData = JsonConvert.DeserializeObject<AspectRatioData>(json);
             return aspectRatioData;
         }
-
-        // Method to get resolutions based on aspect ratio
-        public List<Resolution> GetResolutionsForAspectRatio(string aspectRatio, string filePath)
-        {
-            var aspectRatioData = LoadAspectRatiosFromFile(filePath);
-
-            if (aspectRatioData.AspectRatios.ContainsKey(aspectRatio))
-            {
-                return aspectRatioData.AspectRatios[aspectRatio];
-            }
-
-            Console.WriteLine($"Aspect ratio {aspectRatio} not found.");
-            return new List<Resolution>();
-        }
     }
 }
