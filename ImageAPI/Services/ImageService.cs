@@ -128,14 +128,47 @@ namespace ImageAPI.Services
         }
 
         /// <summary>
+        /// Retrieves the original image by ID.
+        /// </summary>
+        /// <param name="imageId">The ID of the image.</param>
+        /// <returns>The path to the original image.</returns>
+        public async Task<string> GetOriginalImageAsync(Guid imageId)
+        {
+            try
+            {
+                var imageMetadata = await _imageRepository.GetImageByIdAsync(imageId);
+                if (imageMetadata == null)
+                    throw new ArgumentException("Image not found.");
+
+                var originalImagePath = imageMetadata.Original.Path;
+
+                if (!File.Exists(originalImagePath))
+                    throw new InvalidOperationException("Original image file does not exist.");
+
+                return originalImagePath;
+            }
+            catch (ArgumentException)
+            {
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve original image.");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while retrieving the original image.");
+                throw new Exception("Failed to retrieve the original image.");
+            }
+        }
+
+        /// <summary>
         /// Retrieves a specific variation of an image based on the requested height. If the variation does not exist, it generates and stores the variation.
         /// </summary>
         /// <param name="imageId">The unique identifier of the image.</param>
         /// <param name="height">The requested height of the image variation. The height must not exceed the original image height.</param>
         /// <returns>A string representing the path to the generated or existing image variation file.</returns>
-        /// <exception cref="ArgumentException">Thrown when the image with the provided ID does not exist in the repository.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when the requested height exceeds the original image height.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when an error occurs during the process of retrieving or generating the image variation.</exception>
         public async Task<string> GetImageVariationAsync(Guid imageId, int height)
         {
             try
@@ -175,14 +208,14 @@ namespace ImageAPI.Services
             {
                 throw;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException ioEx)
             {
                 throw;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving image variation.");
-                throw new InvalidOperationException("Failed to retrieve image variation.");
+                throw new Exception("Failed to retrieve image variation.");
             }
         }
 
@@ -234,7 +267,7 @@ namespace ImageAPI.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error while deleting image.");
-                throw new InvalidOperationException("Failed to delete image.");
+                throw new Exception("Failed to delete image.");
             }
         }
 

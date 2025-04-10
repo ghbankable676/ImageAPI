@@ -44,6 +44,34 @@ namespace ImageAPI.Controllers
         }
 
         /// <summary>
+        /// Retrieves the original image by ID.
+        /// </summary>
+        /// <param name="imageId">The ID of the image.</param>
+        /// <returns>Path to the original image</returns>
+        [HttpGet("{imageId:guid}")]
+        public async Task<IActionResult> GetImage(Guid imageId)
+        {
+            try
+            {
+                string imagePath = await _imageService.GetOriginalImageAsync(imageId);
+                return Ok(new { ImagePath = imagePath });
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Error = "Failed to retrieve the original image." });
+            }
+        }
+    
+
+        /// <summary>
         /// Retrieves a specific image variation by ID and height.
         /// </summary>
         /// <param name="imageId">The ID of the image.</param>
