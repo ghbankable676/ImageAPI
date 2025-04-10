@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageAPI", "ImageAPI\ImageAPI.csproj", "{66CADA7C-167B-4A11-AB8F-FA6B35003AD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageAPITests", "ImageAPITests\ImageAPITests.csproj", "{F7D4679C-2AF7-4EBC-991E-87824229520C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66CADA7C-167B-4A11-AB8F-FA6B35003AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66CADA7C-167B-4A11-AB8F-FA6B35003AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66CADA7C-167B-4A11-AB8F-FA6B35003AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66CADA7C-167B-4A11-AB8F-FA6B35003AD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7D4679C-2AF7-4EBC-991E-87824229520C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7D4679C-2AF7-4EBC-991E-87824229520C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7D4679C-2AF7-4EBC-991E-87824229520C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7D4679C-2AF7-4EBC-991E-87824229520C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {79D30ED1-55FB-47AB-89F3-A27E1EAC1D19}
+	EndGlobalSection
+EndGlobal
