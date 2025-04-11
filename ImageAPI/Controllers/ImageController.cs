@@ -37,7 +37,7 @@ namespace ImageAPI.Controllers
             {
                 return BadRequest(new { Error = aeEx.Message });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new { Error = "Failed to upload image." });
             }

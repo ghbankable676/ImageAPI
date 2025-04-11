@@ -1,7 +1,7 @@
 ﻿using ImageAPI.Models;
 using ImageAPI.Repositories;
-using static System.Net.Mime.MediaTypeNames;
-using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace ImageAPI.Services
 {
@@ -53,12 +53,14 @@ namespace ImageAPI.Services
                 int originalWidth, originalHeight;
                 try
                 {
-                    using var img = System.Drawing.Image.FromStream(memoryStream);
-                    originalWidth = img.Width;
-                    originalHeight = img.Height;
+                    memoryStream.Position = 0;
+                    using var image = Image.Load(memoryStream);
+                    originalWidth = image.Width;
+                    originalHeight = image.Height;
                 }
-                catch (Exception)
+                catch (Exception iEx)
                 {
+                    _logger.LogError(iEx, "The uploaded file is not a valid image.");
                     throw new ArgumentException("The uploaded file is not a valid image.");
                 }
 
