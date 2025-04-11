@@ -57,6 +57,34 @@ namespace ImageAPITests.Services
         }
         #endregion
 
+        #region GetOriginalImageAsync
+        [Fact]
+        public async Task GetOriginalImageAsync_ShouldReturnImage_WhenImageExists()
+        {
+            // Arrange
+            var (id, metadata) = await SimulateImageUpload();
+            _mockRepo.Setup(r => r.GetImageByIdAsync(id)).ReturnsAsync(metadata);
+
+            // Act
+            var result = await _imageService.GetOriginalImageAsync(id);
+
+            // Assert
+            result.Should().NotBeNullOrEmpty();
+            var fileInfo = new FileInfo(result);
+            fileInfo.Exists.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task GetOriginalImageAsync_ShouldThrowArgumentException_WhenImageDoesNotExist()
+        {
+            var id = Guid.NewGuid(); // Use a random GUID to simulate a non-existing image
+            _mockRepo.Setup(r => r.GetImageByIdAsync(id)).ReturnsAsync((ImageMetadata)null);
+             
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
+                await _imageService.GetOriginalImageAsync(id));
+        }
+        #endregion
+
         #region GetImageVariationAsync
         [Theory]
         [InlineData(1080)]
