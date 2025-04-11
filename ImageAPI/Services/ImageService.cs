@@ -75,7 +75,7 @@ namespace ImageAPI.Services
                 double aspectRatioVal = Math.Round((double)originalWidth / originalHeight, 2);
 
                 // Load aspect ratios from file
-                string aspectJsonPath = Path.Combine(Directory.GetCurrentDirectory(), "Config\\aspect_ratios.json");
+                string aspectJsonPath = Path.Combine(Directory.GetCurrentDirectory(), "Config", "aspect_ratios.json");
                 var ratioService = new AspectRatioResolutionService();
                 var allRatios = ratioService.LoadAspectRatiosFromFile(aspectJsonPath);
 
