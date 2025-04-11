@@ -54,22 +54,23 @@ namespace ImageAPI.Controllers
             try
             {
                 string imagePath = await _imageService.GetOriginalImageAsync(imageId);
-                return Ok(new { ImagePath = imagePath });
+
+                if (!System.IO.File.Exists(imagePath))
+                    return NotFound(new { Error = "Image not found on disk." });
+
+                string contentType = GetContentType(imagePath);
+                return PhysicalFile(imagePath, contentType);
             }
             catch (ArgumentException ex)
             {
                 return NotFound(new { Error = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { Error = ex.Message });
             }
             catch (Exception)
             {
                 return StatusCode(500, new { Error = "Failed to retrieve the original image." });
             }
         }
-    
+
 
         /// <summary>
         /// Retrieves a specific image variation by ID and height.
@@ -83,7 +84,12 @@ namespace ImageAPI.Controllers
             try
             {
                 string imagePath = await _imageService.GetImageVariationAsync(imageId, height);
-                return Ok(new { ImagePath = imagePath });
+
+                if (!System.IO.File.Exists(imagePath))
+                    return NotFound(new { Error = "Image variation not found on disk." });
+
+                string contentType = GetContentType(imagePath);
+                return PhysicalFile(imagePath, contentType);
             }
             catch (ArgumentException ex)
             {
@@ -125,5 +131,20 @@ namespace ImageAPI.Controllers
                 return StatusCode(500, new { Error = "Failed to delete image." });
             }
         }
+
+        #region Helper methods
+        private string GetContentType(string path)
+        {
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return ext switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".bmp" => "image/bmp",
+                _ => "application/octet-stream"
+            };
+        }
+        #endregion
     }
 }

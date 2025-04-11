@@ -50,14 +50,14 @@ Follow these steps to run the API locally:
 
 - **Description**: Retrieves the original image.
 - **Parameters**: `imageId` (Guid)
-- **Response**: (Local) Path of the image file.
+- **Response**: Path of the image file.
 
 ### Get Image Variation
 **GET** `/api/images/{imageId}/variation/{height}`
 
 - **Description**: Retrieves a resized version of the image.
 - **Parameters**: `imageId` (Guid), `height` (int)
-- **Response**: (Local) path of the resized image.
+- **Response**: Path of the resized image.
 
 ### Delete Image
 **DELETE** `/api/images/{imageId}`
