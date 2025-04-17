@@ -42,6 +42,11 @@ Log.Logger = loggerConfig.CreateLogger();
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog();
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 100 * 1024 * 1024; // 100 MB
+});
+
 // Bind AppSettings section
 builder.Services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
 var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();

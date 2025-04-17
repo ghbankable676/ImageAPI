@@ -14,8 +14,8 @@ Follow these steps to run the API locally:
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/image-api.git
-    cd image-api
+    git clone https://github.com/ghbankable676/ImageAPI
+    cd ImageAPI
     ```
 
 2. **Install dependencies**:
@@ -26,15 +26,17 @@ Follow these steps to run the API locally:
     ```
 
 3. **Configure the app settings**:
-    Ensure that `appsettings.json` is correctly set up with your desired configuration
+    Ensure that `appsettings.json` - available at ImageAPI\ImageAPI - is correctly set up with your desired configuration
         ImageBasePath is the only required configuration to change - it sets the path to store images in the filesystem
         While there is an implementation for MongoDB, it was not tested and UseMongo should be set to false.
 
 4. **Run the application**:
     ```bash
+    cd ImageAPI
     dotnet run
     ```
-    The API will be available at `https://localhost:7039`.
+    Ensure it's being run at the project level. The API will be available at `http://localhost:5091`.
+    A testing interface is available through Swagger at http://localhost:5091/swagger/index.html
 
 ## API Endpoints
 
@@ -77,3 +79,34 @@ The API uses standard HTTP status codes for errors - they are simplified but sho
 ## Logging
 
 Logs are saved in the `Logs` folder, with daily rolling filenames (e.g., `log-20250410.log`).
+
+## Architecture overview
+
+Components
+
+    ImageAPI:
+        Controllers (API Layer)
+        Exposes HTTP endpoints for image upload, retrieval, and variation access using RESTful principles.
+
+        Services (Business Logic)
+        The ImageService handles the core logic for storing images, generating resized variations, validating dimensions, and interacting with the repository.
+        The AspectRatioResolutionService is responsible for calculating the aspect ratio and determining the appropriate resolution for image variations.
+
+        Repositories (Persistence Abstraction)
+        Supports two interchangeable implementations for image metadata storage:
+
+            In-Memory: ImageRepository.cs - A simple implementation using a dictionary and stored in the filesystem in a json file.
+
+            MongoDB: ImageRepositoryMongo.cs For persistent metadata storage using Mongo (configurable via AppSettings, although not tested).
+
+        Models
+        Defines the data structures for images and their metadata.
+
+        Storage Layer
+
+            Image files are stored on disk using a configurable ImageBasePath.
+
+            Local storage paths are dynamically created per image using GUIDs
+
+    ImageAPITests
+        Unit tests for the API, covering various scenarios for image upload, retrieval, and deletion.
